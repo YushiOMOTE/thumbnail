@@ -12,20 +12,29 @@ function Image(props) {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundColor: "transparent",
-        border: "0",
+        borderRadius: "10%",
+        border: "none",
+        outline: "none",
     };
 
     function onCopy(name) {
         return () => {
-            console.log("copied");
             NotificationManager.info(name, "Copied!", 1000);
         };
+    }
+
+    function onMouseOver(e) {
+        e.currentTarget.style.border = "2px solid #008cba";
+    }
+
+    function onMouseOut(e) {
+        e.currentTarget.style.border = "none";
     }
 
     var markdown = "![](" + props.url + ")";
     return (
         <CopyToClipboard text={markdown} onCopy={onCopy(props.base)}>
-            <button style={style} />
+            <button style={style} onMouseOver={onMouseOver} onMouseOut={onMouseOut} />
         </CopyToClipboard>
     );
 }
