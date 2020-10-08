@@ -15,12 +15,13 @@
   },
   "dependencies": {
     "gatsby": "^2.24.67",
+    "gatsby-plugin-react-helmet": "^3.3.13",
     "gatsby-source-filesystem": "^2.3.33",
     "react": "^16.12.0",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.12.0",
-    "react-notifications": "^1.7.2",
-    "react-toast-notifications": "^2.4.0"
+    "react-helmet": "^6.1.0",
+    "react-notifications": "^1.7.2"
   },
   "devDependencies": {
     "prettier": "2.1.2"

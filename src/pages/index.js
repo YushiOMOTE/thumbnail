@@ -1,29 +1,25 @@
 import React from "react"
-import Image from "../components/image"
-import {NotificationContainer} from "react-notifications"
+import {graphql} from "gatsby"
+import Thumbnail from "../components/image"
+import {Helmet} from "react-helmet"
 
-export default function Home({ data }) {
-    var base = window.location.href;
-
+export default function Home({data}) {
     return (<div>
-            <link href="https://minhtran.dev/react-notifications/app.css" rel="stylesheet" />
-            <div>
-            {data.allFile.edges.map(({node}, index) => (
-                    <Image url={base + node.publicURL} />
-            ))}
-            </div>
-            <NotificationContainer />
-            <script type="text/javascript" src="https://minhtran.dev/react-notifications/app.js" />
+                <Helmet>
+                    <title>{data.site.siteMetadata.title}</title>
+                </Helmet>
+                <link href={"/notifications.css"} rel="stylesheet" />
+                <Thumbnail base={data.site.siteMetadata.imageBaseURL} />
             </div>)
 }
 
 export const query = graphql`
 query {
-  allFile {
-    edges {
-      node {
-        publicURL
-      }
+  site {
+    siteMetadata {
+      title
+      imageBaseURL
     }
   }
-}`;
+}
+`
