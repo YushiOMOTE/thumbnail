@@ -1,7 +1,8 @@
 import React from "react"
 import {StaticQuery, graphql} from "gatsby"
 import CopyToClipboard from "react-copy-to-clipboard"
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {Slide,ToastContainer,toast} from 'react-toastify';
+import './toastify/ReactToastify.css';
 
 function Image(props) {
     var style = {
@@ -19,7 +20,7 @@ function Image(props) {
 
     function onCopy(name) {
         return () => {
-            NotificationManager.info(name, "Copied!", 1000);
+            toast.info("Copied!", {autoClose: 2000});
         };
     }
 
@@ -59,7 +60,17 @@ export default (props) => (
                 {data.allFile.edges.map(({node}, index) => (
                     <Image url={props.base + node.relativePath} base={node.base} />
                 ))}
-                <NotificationContainer />
+                <ToastContainer
+                    transition={Slide}
+                    position="top-right"
+                    hideProgressBar
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
             </div>
         )}
     />

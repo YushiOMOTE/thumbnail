@@ -8,7 +8,6 @@ export default function Home({data}) {
                 <Helmet>
                     <title>{data.site.siteMetadata.title}</title>
                 </Helmet>
-                <link href={"/notifications.css"} rel="stylesheet" />
                 <Thumbnail base={data.site.siteMetadata.imageBaseURL} />
             </div>)
 }
