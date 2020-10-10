@@ -80,7 +80,7 @@ export default class Thambnail extends React.Component {
         }
 
         return (
-            <div style={{width: "100%"}}>
+            <div style={{width: "95%", margin: "auto"}}>
                 <StaticQuery
                     query={query}
                     render={data => {
@@ -105,7 +105,7 @@ export default class Thambnail extends React.Component {
                                     <Grid item>Large</Grid>
                                 </Grid>
 
-                                <Paper style={{padding: '2px 4px', display: 'flex', alignItems: 'center', width: 400}}>
+                                <Paper style={{padding: '2px 4px', display: 'flex', alignItems: 'center', width: "100%"}}>
                                     <InputBase
                                         style={{merginLeft: 1, flex: 1}}
                                         placeHolder="Search"
@@ -128,7 +128,7 @@ export default class Thambnail extends React.Component {
                                     <MenuItem value={400}>400</MenuItem>
                                 </Select>
 
-                                <Pagination style={{margin: "10px"}} count={pages} page={page} variant="outlined" color="primary" onChange={this.onPageChange} />
+                                <Pagination style={{margin: "10px", width: "90%"}} count={pages} page={page} variant="outlined" color="primary" onChange={this.onPageChange} />
 
                                 <ToastContainer
                                     transition={Slide}
