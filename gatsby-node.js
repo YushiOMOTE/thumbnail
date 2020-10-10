@@ -4,7 +4,9 @@ const path = require('path')
 const gifsicle = require('gifsicle')
 const { execFile } = require('child_process')
 
-function processGif(options, src, dest) {
+async function createGifFile(options, src, dest) {
+    await fs.mkdirp(path.dirname(dest));
+
     var args = ['-o', dest];
 
     if (options.width) {
@@ -30,64 +32,70 @@ function processGif(options, src, dest) {
     }
     args.push(src);
 
-    execFile(gifsicle, args, err => {
-        if (err) {
-            console.log(`Cannot process image: ${src}: ${err}`)
-        }
-    });
+    await execFile(gifsicle, args);
 
     console.debug(`Created file: ${dest}`);
 }
 
-function processLargeGif(src, dest) {
-    processGif({
-        width: process.env.THUMBNAIL_IMAGE_LARGE_WIDTH,
-        height: process.env.THUMBNAIL_IMAGE_LARGE_HEIGHT,
-        scale: process.env.THUMBNAIL_IMAGE_LARGE_SCALE,
-        loop: process.env.THUMBNAIL_IMAGE_LOOPCOUNT,
-    }, src, dest)
+async function createGifNode(options, attr, rel, src, dest) {
+    var { actions, createNodeId, createContentDigest } = options;
+    var { createNode } = actions;
+
+    var file = path.basename(dest);
+
+    var content = Buffer.from(fs.readFileSync(dest)).toString(`base64`);
+    var id = createNodeId(`stamp-${attr}-${file}`);
+
+    var meta = {
+        id,
+        parent: null,
+        children: [],
+        internal: {
+            type: `Stamp`,
+            mediaType: 'image/gif',
+            content: `${attr}-${file}`,
+            contentDigest: createContentDigest(content),
+        }
+    };
+    var data = {
+        absolutePath: dest,
+        sourcePath: src,
+        relativePath: rel,
+        base64: content,
+    };
+    var node = Object.assign({}, data, meta);
+    await createNode(node);
+    console.log(`Created ${id}`)
 }
 
-function processSmallGif(src, dest) {
-    processGif({
-        width: process.env.THUMBNAIL_IMAGE_SMALL_WIDTH,
-        height: process.env.THUMBNAIL_IMAGE_SMALL_HEIGHT,
-        scale: process.env.THUMBNAIL_IMAGE_SMALL_SCALE,
-        loop: process.env.THUMBNAIL_IMAGE_LOOPCOUNT,
-    }, src, dest)
-}
-
-exports.sourceNodes = (options) => {
-    console.log("hi");
-    const { reporter } = options;
-
-    var src = process.env.THUMBNAIL_IMAGE_PATH;
+async function processGif(options, attr, src, file) {
     var suffix = process.env.THUMBNAIL_IMAGE_SUFFIX || '/static/images';
-    var dest = `${__dirname}/public/${suffix}`;
-    var large = `${dest}/large`;
-    var small = `${dest}/small`;
+    var dest = `${__dirname}/public${suffix}`;
 
-    [large, small].forEach((dest) => {
-        fs.mkdirSync(dest, { recursive: true }, (err) => {
-            if (err) {
-                console.log(`Cannot create directory: ${dest}`)
-            }
-        });
+    let eattr = attr.toUpperCase();
+    let srcfile = path.join(src, file);
+    let destfile = path.join(dest, attr, file);
+    let relfile = path.join(suffix, attr, file);
+
+    await createGifFile({
+        width: process.env[`THUMBNAIL_IMAGE_${eattr}_WIDTH`],
+        height: process.env[`THUMBNAIL_IMAGE_${eattr}_HEIGHT`],
+        scale: process.env[`THUMBNAIL_IMAGE_${eattr}_SCALE`],
+        loop: process.env[`THUMBNAIL_IMAGE_LOOPCOUNT`],
+    }, srcfile, destfile);
+    await createGifNode(options, attr, relfile, srcfile, destfile);
+}
+
+exports.sourceNodes = async (options) => {
+    var src = process.env.THUMBNAIL_IMAGE_PATH || `${__dirname}/src/images`;
+
+    var files = await fs.readdir(src);
+    var gifs = files.filter((file) => {
+        return path.extname(file).toLowerCase() == ".gif"
     });
 
-    fs.readdir(src, (err, files) => {
-        if (err) {
-            console.log(`Cannot read directory: ${src}`);
-            return;
-        }
-
-        var gifs = files.filter((file) => {
-            return path.extname(file).toLowerCase() == ".gif"
-        });
-
-        gifs.forEach((file) => {
-            processLargeGif(path.join(src, file), path.join(large, file));
-            processSmallGif(path.join(src, file), path.join(small, file));
-        })
-    })
+    for (const gif of gifs) {
+        await processGif(options, "small", src, gif);
+        await processGif(options, "large", src, gif);
+    }
 }
