@@ -98,7 +98,7 @@ export default class Thambnail extends React.Component {
                         var max = page * pageSize - 1;
 
                         return (
-                            <div>
+                            <div style={{width: "100%", align: "center"}}>
                                 <Grid container component="label" spacing={1} alignItems="center">
                                     <Grid item>Small</Grid>
                                     <Grid item><Switch checked={this.state.large} onChange={this.onSwitch} color="primary" /></Grid>
@@ -128,7 +128,7 @@ export default class Thambnail extends React.Component {
                                     <MenuItem value={400}>400</MenuItem>
                                 </Select>
 
-                                <Pagination style={{margin: "10px", width: "90%"}} count={pages} page={page} variant="outlined" color="primary" onChange={this.onPageChange} />
+                                <Pagination style={{display: "flex", justifyContent: "center", margin: "20px"}} count={pages} page={page} variant="outlined" color="primary" onChange={this.onPageChange} />
 
                                 <ToastContainer
                                     transition={Slide}
