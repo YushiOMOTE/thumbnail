@@ -16,6 +16,10 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+
+
 const query = graphql`
 query {
   allFile {
@@ -31,12 +35,16 @@ query {
 export default class Thambnail extends React.Component {
     constructor() {
         super();
-        this.pageSize = 500;
-        this.state = { large: true, keyword: "", page: 1 };
+
+        this.defaultPageSize = 200;
+        var pageSize = localStorage.getItem('pageSize') || this.defaultPageSize;
+
+        this.state = { large: true, keyword: "", page: 1, pageSize };
         this.onSwitch = this.onSwitch.bind(this);
         this.onSearch = this.onSearch.bind(this);
         this.onClickSearch = this.onClickSearch.bind(this);
         this.onPageChange = this.onPageChange.bind(this);
+        this.onChangePageSize = this.onChangePageSize.bind(this);
     }
 
     onSwitch(event) {
@@ -54,6 +62,11 @@ export default class Thambnail extends React.Component {
     onPageChange(event, page) {
         console.log(page);
         this.setState({ page })
+    }
+
+    onChangePageSize(event) {
+        localStorage.setItem('pageSize', event.target.value);
+        this.setState({ pageSize: event.target.value, page: 1 })
     }
 
     render() {
@@ -74,10 +87,11 @@ export default class Thambnail extends React.Component {
                                 return node.relativePath.includes(this.state.keyword)
                             }
                         });
-                        var pages = Math.floor(items.length / this.pageSize);
+                        var pageSize = this.state.pageSize;
+                        var pages = Math.floor(items.length / pageSize);
                         var page = Math.max(Math.min(this.state.page, pages + 1), 1);
-                        var index_min = (page - 1) * this.pageSize;
-                        var index_max = page * this.pageSize - 1;
+                        var min = (page - 1) * pageSize;
+                        var max = page * pageSize - 1;
 
                         return (
                             <div>
@@ -100,6 +114,16 @@ export default class Thambnail extends React.Component {
                                     </IconButton>
                                 </Paper>
 
+                                <Select
+                                    defaultValue={this.defaultPageSize}
+                                    value={this.state.pageSize}
+                                    onChange={this.onChangePageSize}>
+                                    <MenuItem value={50}>50</MenuItem>
+                                    <MenuItem value={100}>100</MenuItem>
+                                    <MenuItem value={200}>200</MenuItem>
+                                    <MenuItem value={400}>400</MenuItem>
+                                </Select>
+
                                 <Pagination style={{margin: "10px"}} count={pages} page={page} variant="outlined" color="primary" onChange={this.onPageChange} />
 
                                 <ToastContainer
@@ -115,7 +139,7 @@ export default class Thambnail extends React.Component {
                                 />
 
                                 {items.filter(({node}, index) => {
-                                    if (index >= index_min && index <= index_max) {
+                                    if (index >= min && index <= max) {
                                         return true;
                                     } else {
                                         return false;
