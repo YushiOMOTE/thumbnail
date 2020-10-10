@@ -21,7 +21,10 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.12.0",
     "react-helmet": "^6.1.0",
-    "react-toastify": "^6.0.9"
+    "react-search-field": "^1.1.0",
+    "react-switch": "^5.0.1",
+    "react-toastify": "^6.0.9",
+    "react-tooltip": "^4.2.10"
   },
   "devDependencies": {
     "prettier": "2.1.2"
