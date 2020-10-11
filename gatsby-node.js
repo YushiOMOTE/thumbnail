@@ -58,6 +58,8 @@ async function createGifNode(options, attr, rel, src, dest) {
         }
     };
     var data = {
+        attr: attr,
+        filename: file,
         absolutePath: dest,
         sourcePath: src,
         relativePath: rel,
@@ -69,7 +71,7 @@ async function createGifNode(options, attr, rel, src, dest) {
 }
 
 async function processGif(options, attr, src, file) {
-    var suffix = process.env.THUMBNAIL_IMAGE_SUFFIX || '/static/images';
+    var suffix = process.env.THUMBNAIL_IMAGE_SITEPATH || '/static/images';
     var dest = `${__dirname}/public${suffix}`;
 
     let eattr = attr.toUpperCase();

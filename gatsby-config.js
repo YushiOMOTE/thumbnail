@@ -4,10 +4,6 @@ require("dotenv").config({
 
 module.exports = {
     pathPrefix: process.env.THUMBNAIL_PATH_PREFIX || "/",
-    siteMetadata: {
-        title: process.env.THUMBNAIL_TITLE,
-        imageBaseURL: process.env.THUMBNAIL_IMAGE_BASE_URL,
-    },
     plugins: [
         {
             resolve: `gatsby-source-filesystem`,

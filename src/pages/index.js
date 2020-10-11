@@ -3,22 +3,25 @@ import {graphql} from "gatsby"
 import Thumbnail from "../components/image"
 import {Helmet} from "react-helmet"
 
-export default function Home({data}) {
-    return (<div>
-                <Helmet>
-                    <title>{data.site.siteMetadata.title}</title>
-                </Helmet>
-                <Thumbnail base={data.site.siteMetadata.imageBaseURL} />
-            </div>)
-}
-
-export const query = graphql`
-query {
-  site {
-    siteMetadata {
-      title
-      imageBaseURL
+export default class Home extends React.Component {
+    constructor() {
+        super()
+        this.state = { base: process.env.THUMBNAIL_IMAGE_BASE_URL }
     }
-  }
+
+    componentDidMount() {
+        if (!this.state.base) {
+            var base = window.location.href;
+            this.setState({ base })
+        }
+    }
+
+    render() {
+        return (<div>
+            <Helmet>
+                <title>{process.env.THUMBNAIL_TITLE || "Thumbnail"}</title>
+            </Helmet>
+            <Thumbnail base={this.state.base} />
+        </div>)
+    }
 }
-`

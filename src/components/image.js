@@ -22,10 +22,11 @@ import Select from '@material-ui/core/Select';
 
 const query = graphql`
 query {
-  allFile {
+  allStamp {
     edges {
       node {
-        base
+        attr
+        filename
         relativePath
       }
     }
@@ -74,21 +75,22 @@ export default class Thambnail extends React.Component {
     }
 
     render() {
-        var size = "";
-        if (!this.state.large) {
-            size = " =200x200"
-        }
-
         return (
             <div style={{width: "95%", margin: "auto"}}>
                 <StaticQuery
                     query={query}
                     render={data => {
-                        var items = data.allFile.edges.filter(({node}, index) => {
+                        var items = data.allStamp.edges.filter(({node}, index) => {
                             if (this.state.keyword === "") {
                                 return true
                             } else {
                                 return node.relativePath.includes(this.state.keyword)
+                            }
+                        }).filter(({node}, index) => {
+                            if (this.state.large) {
+                                return node.attr === "large";
+                            } else {
+                                return node.attr === "small";
                             }
                         });
                         var pageSize = this.state.pageSize;
@@ -149,7 +151,7 @@ export default class Thambnail extends React.Component {
                                         return false;
                                     }
                                 }).map(({node}, index) => (
-                                    <Image url={this.props.base + node.relativePath} base={node.base} size={size} />
+                                    <Image url={this.props.base + node.relativePath} filename={node.filename} />
                                 ))}
 
                                 <ReactToolTip delayShow={500}/>
@@ -160,6 +162,10 @@ export default class Thambnail extends React.Component {
             </div>
         )
     }
+}
+
+function remove_dblscore(s) {
+    return s.replace(/([^:]\/)\/+/g, "$1")
 }
 
 class Image extends React.Component {
@@ -191,11 +197,10 @@ class Image extends React.Component {
             e.currentTarget.style.border = "none";
         }
 
-        var size = this.props.size || "";
-        var markdown = "![](" + this.props.url + size + ")";
+        var markdown = "![](" + remove_dblscore(this.props.url) + ")";
         return (
-            <CopyToClipboard text={markdown} onCopy={onCopy(this.props.base)}>
-                <button data-tip={this.props.base} style={style} onMouseOver={onMouseOver} onMouseOut={onMouseOut} />
+            <CopyToClipboard text={markdown} onCopy={onCopy(this.props.filename)}>
+                <button data-tip={this.props.filename} style={style} onMouseOver={onMouseOver} onMouseOut={onMouseOut} />
             </CopyToClipboard>
         );
     }
