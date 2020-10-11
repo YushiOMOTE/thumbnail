@@ -1,8 +1,10 @@
+const util = require('util');
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const fs = require('fs-extra')
 const path = require('path')
 const gifsicle = require('gifsicle')
-const { execFile } = require('child_process')
+
+const execFile = util.promisify(require('child_process').execFile);
 
 async function createGifFile(options, src, dest) {
     await fs.mkdirp(path.dirname(dest));
@@ -43,7 +45,7 @@ async function createGifNode(options, attr, rel, src, dest) {
 
     var file = path.basename(dest);
 
-    var content = Buffer.from(fs.readFileSync(dest)).toString(`base64`);
+    var content = Buffer.from(await fs.readFile(dest)).toString(`base64`);
     var id = createNodeId(`stamp-${attr}-${file}`);
 
     var meta = {
