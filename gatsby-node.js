@@ -32,11 +32,15 @@ async function createGifFile(options, src, dest) {
             args.push(`--loopcount=${options.loop}`);
         }
     }
+
+    var extra_options = process.env.THUMBNAIL_GIFSICLE_OPTIONS;
+    if (extra_options) {
+        args.concat(extra_options.split(" "));
+    }
+
     args.push(src);
 
     await execFile(gifsicle, args);
-
-    console.debug(`Created file: ${dest}`);
 }
 
 async function createGifNode(options, attr, rel, src, dest) {
@@ -69,7 +73,6 @@ async function createGifNode(options, attr, rel, src, dest) {
     };
     var node = Object.assign({}, data, meta);
     await createNode(node);
-    console.log(`Created ${id}`)
 }
 
 async function processGif(options, attr, src, file) {
