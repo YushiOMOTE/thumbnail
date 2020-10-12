@@ -49,11 +49,14 @@ export default class Thambnail extends React.Component {
     componentDidMount() {
         this.defaultPageSize = 200;
         var pageSize = localStorage.getItem('pageSize') || this.defaultPageSize;
-        this.setState({ pageSize })
+        var large = (localStorage.getItem('large') || "true") == "true";
+        this.setState({ pageSize, large })
     }
 
     onSwitch(event) {
-        this.setState({ large: event.target.checked })
+        let large = event.target.checked;
+        localStorage.setItem('large', large);
+        this.setState({ large })
     }
 
     onSearch(event) {
