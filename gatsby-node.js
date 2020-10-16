@@ -73,7 +73,6 @@ async function createGifNode(options, attr, rel, src, dest) {
     };
     var node = Object.assign({}, data, meta);
     await createNode(node);
-    console.log(`created ${file}`)
 }
 
 async function processGif(options, attr, src, file) {
