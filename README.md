@@ -14,6 +14,8 @@ Gatsby project to generate GIF image thumbnail, where you can copy the image URL
 
 ![](https://github.com/YushiOMOTE/thumbnail/blob/master/assets/demo.png)
 
+(* The GIF images are from [here](https://github.com/jmhobbs/cultofthepartyparrot.com))
+
 ## Setup
 
 ```sh
@@ -21,6 +23,8 @@ npm install
 ```
 
 ## Develop
+
+You first need to bring some GIF images and put them in your local directory, and set the environment variable `THUMBNAIL_IMAGE_PATH` to the directory.
 
 ```sh
 gatsby develop
