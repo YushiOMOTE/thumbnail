@@ -34,14 +34,14 @@ gatsby build --prefix-paths
 
 ## Config
 
-Use environment variables to change the parameters. `dotenv` files (`.env.development` and `.env.production`) are also available.
+Use environment variables to change the settings. `dotenv` files (`.env.development` and `.env.production`) are also available.
 
 ```sh
 ## Title.
 THUMBNAIL_TITLE=Shacho
 
 ## Path to images to import.
-THUMBNAIL_IMAGE_PATH=/home/yushiomote/dev/ketakuma/stamps
+THUMBNAIL_IMAGE_PATH=/home/yushiomote/dev/cultofthepartyparrot.com/parrots/hd
 
 ## Prefix of the thumbnail URL.
 # THUMBNAIL_PATH_PREFIX=/thumbnail-demo
@@ -49,7 +49,7 @@ THUMBNAIL_IMAGE_PATH=/home/yushiomote/dev/ketakuma/stamps
 ## Set in case the actual image location and the thumbnail location differ.
 # THUMBNAIL_IMAGE_BASE_URL=http://localhost:8001/
 
-## The loop count of gif image (-1 for no loop, 0 or forever for infinit loop)
+## The loop count of gif image (-1 for no loop, 0 for infinit loop)
 THUMBNAIL_IMAGE_LOOPCOUNT=forever
 
 ## The location of images in the thumbnail site.
@@ -63,7 +63,7 @@ THUMBNAIL_IMAGE_LOOPCOUNT=forever
 # THUMBNAIL_IMAGE_LARGE_MATCH_REPLACE="![]($1)"
 
 ## Small image configuration
-# THUMBNAIL_IMAGE_SMALL_ENABLE=true
+THUMBNAIL_IMAGE_SMALL_ENABLE=true
 # THUMBNAIL_IMAGE_SMALL_WIDTH=100
 # THUMBNAIL_IMAGE_SMALL_HEIGHT=100
 # THUMBNAIL_IMAGE_SMALL_SCALE=0.5x0.5
