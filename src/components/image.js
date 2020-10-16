@@ -112,7 +112,7 @@ export default class Thambnail extends React.Component {
                             }
                         });
                         var pageSize = this.state.pageSize;
-                        var pages = Math.floor(items.length / pageSize);
+                        var pages = Math.ceil(items.length / pageSize);
                         var page = Math.max(Math.min(this.state.page, pages + 1), 1);
                         var min = (page - 1) * pageSize;
                         var max = page * pageSize - 1;
