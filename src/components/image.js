@@ -19,6 +19,21 @@ import SearchIcon from '@material-ui/icons/Search';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
+function parse_regex(user_regex) {
+    if (user_regex === undefined) {
+        return undefined;
+    }
+    var flags = user_regex.replace(/.*\/([gimy]*)$/, '$1');
+    var pattern = user_regex.replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
+    return new RegExp(pattern, flags);
+}
+
+function get_replacer(pattern, replace) {
+    return {
+        regex: parse_regex(pattern) || /(.*)/,
+        replace: replace || "![]($1)"
+    }
+}
 
 const query = graphql`
 query {
@@ -49,7 +64,7 @@ export default class Thambnail extends React.Component {
     componentDidMount() {
         this.defaultPageSize = 200;
         var pageSize = localStorage.getItem('pageSize') || this.defaultPageSize;
-        var large = (localStorage.getItem('large') || "true") == "true";
+        var large = (localStorage.getItem('large') || "true") === "true";
         this.setState({ pageSize, large })
     }
 
@@ -102,13 +117,30 @@ export default class Thambnail extends React.Component {
                         var min = (page - 1) * pageSize;
                         var max = page * pageSize - 1;
 
+                        var sw;
+                        if ((process.env.THUMBNAIL_IMAGE_SMALL_ENABLE || "0") !== "0") {
+                            sw = (<Grid container component="label" spacing={1} alignItems="center">
+                                <Grid item>Small</Grid>
+                                <Grid item><Switch checked={this.state.large} onChange={this.onSwitch} color="primary" /></Grid>
+                                <Grid item>Large</Grid>
+                            </Grid>);
+                        } else {
+                            sw = (<div/>);
+                        }
+
+                        var {regex, replace} = this.state.large ?
+                            get_replacer(
+                                process.env.THUMBNAIL_IMAGE_LARGE_MATCH,
+                                process.env.THUMBNAIL_IMAGE_LARGE_MATCH_REPLACE
+                            ) :
+                            get_replacer(
+                                process.env.THUMBNAIL_IMAGE_SMALL_MATCH,
+                                process.env.THUMBNAIL_IMAGE_SMALL_MATCH_REPLACE
+                            );
+
                         return (
                             <div style={{width: "100%", align: "center"}}>
-                                <Grid container component="label" spacing={1} alignItems="center">
-                                    <Grid item>Small</Grid>
-                                    <Grid item><Switch checked={this.state.large} onChange={this.onSwitch} color="primary" /></Grid>
-                                    <Grid item>Large</Grid>
-                                </Grid>
+                                {sw}
 
                                 <Paper style={{padding: '2px 4px', display: 'flex', alignItems: 'center', width: "100%"}}>
                                     <InputBase
@@ -154,7 +186,7 @@ export default class Thambnail extends React.Component {
                                         return false;
                                     }
                                 }).map(({node}, index) => (
-                                    <Image url={this.props.base + node.relativePath} filename={node.filename} />
+                                    <Image url={this.props.base + node.relativePath} filename={node.filename} regex={regex} replace={replace} />
                                 ))}
 
                                 <ReactToolTip delayShow={500}/>
@@ -200,10 +232,11 @@ class Image extends React.Component {
             e.currentTarget.style.border = "none";
         }
 
-        var markdown = "![](" + remove_dblscore(this.props.url) + ")";
+        var url = remove_dblscore(this.props.url);
+        var markdown = url.replace(this.props.regex, this.props.replace);
         return (
             <CopyToClipboard text={markdown} onCopy={onCopy(this.props.filename)}>
-                <button data-tip={this.props.filename} style={style} onMouseOver={onMouseOver} onMouseOut={onMouseOut} />
+                <button aria-label="copy" data-tip={this.props.filename} style={style} onMouseOver={onMouseOver} onMouseOut={onMouseOut} onFocus={onMouseOver} onBlur={onMouseOut} />
             </CopyToClipboard>
         );
     }

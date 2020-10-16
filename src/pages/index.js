@@ -1,5 +1,4 @@
 import React from "react"
-import {graphql} from "gatsby"
 import Thumbnail from "../components/image"
 import {Helmet} from "react-helmet"
 
