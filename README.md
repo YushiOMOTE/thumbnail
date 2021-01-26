@@ -19,7 +19,7 @@ Gatsby project to generate GIF image thumbnail, where you can copy the image URL
 ## Setup
 
 ```sh
-npm install
+yarn install
 ```
 
 ## Develop
@@ -27,13 +27,13 @@ npm install
 You first need to bring some GIF images and put them in your local directory, and set the environment variable `THUMBNAIL_IMAGE_PATH` to the directory.
 
 ```sh
-gatsby develop
+yarn gatsby develop
 ```
 
 ## Build
 
 ```sh
-gatsby build --prefix-paths
+yarn gatsby build --prefix-paths
 ```
 
 ## Config
