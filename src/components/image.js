@@ -146,7 +146,7 @@ export default class Thambnail extends React.Component {
                             });
                             break;
                         case SortMode.random:
-                            if (this.state.shuffled.length == 0) {
+                            if (this.state.shuffled.length === 0) {
                                 var shuffled = shuffle(edges);
                                 edges = shuffled;
                                 this.setState({ shuffled });
@@ -160,6 +160,7 @@ export default class Thambnail extends React.Component {
                                   </Button>
                                 </Grid>);
                             break;
+                        default:
                         }
 
                         var items = edges.filter(({node}, index) => {
