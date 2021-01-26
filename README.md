@@ -16,24 +16,43 @@ Gatsby project to generate GIF image thumbnail, where you can copy the image URL
 
 (* The GIF images are from [here](https://github.com/jmhobbs/cultofthepartyparrot.com))
 
-## Setup
+## Try it out
+
+Try it out with example images.
 
 ```sh
+# Checkout example images from cultofthepartyparrot.com
+git submodule update --init
+
+# Install dependencies
 yarn install
+
+# Run it for testing
+yarn develop
 ```
 
-## Develop
+Check `http://127.0.0.1:8000` in your browser.
 
-You first need to bring some GIF images and put them in your local directory, and set the environment variable `THUMBNAIL_IMAGE_PATH` to the directory.
+## Build the static site
 
 ```sh
-yarn gatsby develop
+yarn build
 ```
 
-## Build
+The site is installed to the sub-directory `public`.
+
+## Build as a desktop app
+
+To launch the app for testing
 
 ```sh
-yarn gatsby build --prefix-paths
+yarn electron-dev
+```
+
+To pack the app as an executable
+
+```sh
+yarn electron-pack
 ```
 
 ## Config
@@ -45,7 +64,7 @@ Use environment variables to change the settings. `dotenv` files (`.env.developm
 THUMBNAIL_TITLE=Shacho
 
 ## Path to images to import.
-THUMBNAIL_IMAGE_PATH=/home/yushiomote/dev/cultofthepartyparrot.com/parrots/hd
+THUMBNAIL_IMAGE_PATH=cultofthepartyparrot.com/parrots/hd
 
 ## Prefix of the thumbnail URL.
 # THUMBNAIL_PATH_PREFIX=/thumbnail-demo
