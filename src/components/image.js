@@ -199,16 +199,18 @@ export default class Thambnail extends React.Component {
     }
 }
 
-function remove_dblscore(s) {
+function remove_dblslash(s) {
     return s.replace(/([^:]\/)\/+/g, "$1")
 }
 
 class Image extends React.Component {
     render() {
+        var url = remove_dblslash(this.props.url);
+
         var style = {
             width: "100px",
             height: "100px",
-            backgroundImage: "url(" + this.props.url + ")",
+            backgroundImage: "url(" + url + ")",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
@@ -232,7 +234,6 @@ class Image extends React.Component {
             e.currentTarget.style.border = "none";
         }
 
-        var url = remove_dblscore(this.props.url);
         var markdown = url.replace(this.props.regex, this.props.replace);
         return (
             <CopyToClipboard text={markdown} onCopy={onCopy(this.props.filename)}>
