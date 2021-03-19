@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import { Slide, ToastContainer, toast } from "react-toastify"
-import "./toastify/ReactToastify.css"
 import ReactToolTip from "react-tooltip"
 import { Grid } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 import Image from "./image"
 import Form from "./form"
 import { SORT_MODE } from "./const"
+import "react-toastify/dist/ReactToastify.css"
 
 function parseRegex(user_regex) {
   if (user_regex === undefined) {
