@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import { Slide, ToastContainer, toast } from "react-toastify"
-import ReactToolTip from "react-tooltip"
 import { Grid } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 import Image from "./image"
@@ -13,8 +12,8 @@ function parseRegex(user_regex) {
   if (user_regex === undefined) {
     return undefined
   }
-  var flags = user_regex.replace(/.*\/([gimy]*)$/, "$1")
-  var pattern = user_regex.replace(new RegExp("^/(.*?)/" + flags + "$"), "$1")
+  const flags = user_regex.replace(/.*\/([gimy]*)$/, "$1")
+  const pattern = user_regex.replace(new RegExp("^/(.*?)/" + flags + "$"), "$1")
   return new RegExp(pattern, flags)
 }
 
@@ -26,7 +25,7 @@ function getReplacer(pattern, replace) {
 }
 
 function shuffle(array) {
-  var currentIndex = array.length,
+  let currentIndex = array.length,
     temporaryValue,
     randomIndex
 
@@ -228,7 +227,6 @@ export default function Thumbnail(props) {
           </Grid>
         ))}
       </Grid>
-      <ReactToolTip delayShow={500} />
     </Grid>
   )
 }
