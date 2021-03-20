@@ -1,79 +1,64 @@
 import React from "react"
-import {
-  Grid,
-  Paper,
-  InputBase,
-  Divider,
-  IconButton,
-  Button,
-  MenuItem,
-  Select,
-  Switch,
-} from "@material-ui/core"
-import SearchIcon from "@material-ui/icons/Search"
+import { Grid, Button, MenuItem } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import SearchBar from "./search_bar"
+import Switch from "./switch"
+import Select from "./select"
 import { SORT_MODE } from "./const"
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: 600,
+    margin: 4,
+  },
+  searchBar: {
+    width: 600,
+  },
+  pageSize: {
+    width: 80,
+  },
+  sortMode: {
+    width: 120,
+  },
+}))
+
 export default function Form(props) {
+  const classes = useStyles()
+
   const sizeSwitchEnabled =
     (process.env.THUMBNAIL_IMAGE_SMALL_ENABLE || "0") !== "0"
 
   const sizeSwitch = sizeSwitchEnabled && (
-    <Grid item container component="label" spacing={1} alignItems="center">
-      <Grid item>Small</Grid>
-      <Grid item>
-        <Switch
-          checked={props.large}
-          onChange={e => {
-            props.onChange({ name: "large", value: e.target.checked })
-          }}
-          color="primary"
-        />
-      </Grid>
-      <Grid item>Large</Grid>
+    <Grid item>
+      <Switch
+        checked={props.large}
+        onChange={checked => {
+          props.onChange({ name: "large", value: checked })
+        }}
+      />
     </Grid>
   )
 
   return (
-    <Grid container spacing={2} alignItems="center" direction="column">
+    <Grid container spacing={2} direction="column" className={classes.root}>
       {sizeSwitch}
+
       <Grid item>
-        <Paper
-          style={{
-            padding: "2px 4px",
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
+        <SearchBar
+          onChange={keyword => {
+            props.onChange({ name: "keyword", value: keyword })
           }}
-        >
-          <InputBase
-            style={{ width: 500, merginLeft: 1, flex: 1 }}
-            placeholder="Search"
-            inputProps={{ "aria-label": "Search" }}
-            onChange={e => {
-              props.onChange({ name: "keyword", value: e.target.value })
-            }}
-          />
-          <Divider style={{ height: 28, margin: 4 }} orientation="vertical" />
-          <IconButton
-            style={{ padding: 10 }}
-            type="submit"
-            aria-label="search"
-            onClick={props.onClickSearch}
-          >
-            <SearchIcon />
-          </IconButton>
-        </Paper>
+          onClickSearch={props.onClickSearch}
+        />
       </Grid>
+
       <Grid item container spacing={2} alignItems="center">
-        <Grid item>PageSize</Grid>
-        <Grid item>
+        <Grid item className={classes.pageSize}>
           <Select
-            style={{ width: 80 }}
-            variant="outlined"
-            defaultValue={50}
+            label="PageSize"
             value={props.pageSize}
-            onChange={e => {
-              props.onChange({ name: "pageSize", value: e.target.value })
+            onChange={pageSize => {
+              props.onChange({ name: "pageSize", value: pageSize })
             }}
           >
             <MenuItem value={50}>50</MenuItem>
@@ -82,14 +67,13 @@ export default function Form(props) {
             <MenuItem value={400}>400</MenuItem>
           </Select>
         </Grid>
-        <Grid item>Sort</Grid>
-        <Grid item>
+
+        <Grid item className={classes.sortMode}>
           <Select
-            style={{ width: 150 }}
-            variant="outlined"
+            label="Sort"
             value={props.sortMode}
-            onChange={e => {
-              props.onChange({ name: "sortMode", value: e.target.value })
+            onChange={sortMode => {
+              props.onChange({ name: "sortMode", value: sortMode })
             }}
           >
             <MenuItem value={SORT_MODE.name}>Name</MenuItem>
@@ -97,6 +81,7 @@ export default function Form(props) {
             <MenuItem value={SORT_MODE.random}>Random</MenuItem>
           </Select>
         </Grid>
+
         <Grid item>
           <Button
             disabled={!props.shuffleButton}
