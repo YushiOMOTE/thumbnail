@@ -21,6 +21,7 @@ export default function Select(props) {
         className={classes.select}
         label={props.label}
         value={props.value}
+        color="primary"
         onChange={e => {
           props.onChange(e.target.value)
         }}

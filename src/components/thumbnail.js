@@ -182,51 +182,53 @@ export default function Thumbnail(props) {
   const withShuffle = state.sortMode === SORT_MODE.random
 
   return (
-    <Grid container alignItems="center" direction="column" spacing={4}>
-      <Grid item>
-        <Form
-          large={state.large}
-          pageSize={state.pageSize}
-          sortMode={state.sortMode}
-          shuffleButton={withShuffle}
-          onChange={onChange}
-          onClickShuffle={onClickShuffle}
-          onClickSearch={onClickSearch}
+    <div>
+      <Grid container alignItems="center" direction="column" spacing={4}>
+        <Grid item>
+          <Form
+            large={state.large}
+            pageSize={state.pageSize}
+            sortMode={state.sortMode}
+            shuffleButton={withShuffle}
+            onChange={onChange}
+            onClickShuffle={onClickShuffle}
+            onClickSearch={onClickSearch}
+          />
+        </Grid>
+        <Grid item>
+          <Pagination
+            count={pages}
+            page={page}
+            variant="outlined"
+            color="primary"
+            onChange={onPageChange}
+          />
+        </Grid>
+        <ToastContainer
+          transition={Slide}
+          position="top-right"
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
         />
+        <Grid item container spacing={1}>
+          {nodes.map(({ node }, index) => (
+            <Grid item key={index}>
+              <Image
+                url={props.base + node.relativePath}
+                filename={node.filename}
+                regex={regex}
+                replace={replace}
+                onCopy={onImageCopy}
+              />
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
-      <Grid item>
-        <Pagination
-          count={pages}
-          page={page}
-          variant="outlined"
-          color="primary"
-          onChange={onPageChange}
-        />
-      </Grid>
-      <ToastContainer
-        transition={Slide}
-        position="top-right"
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <Grid item container spacing={1}>
-        {nodes.map(({ node }, index) => (
-          <Grid item key={index}>
-            <Image
-              url={props.base + node.relativePath}
-              filename={node.filename}
-              regex={regex}
-              replace={replace}
-              onCopy={onImageCopy}
-            />
-          </Grid>
-        ))}
-      </Grid>
-    </Grid>
+    </div>
   )
 }

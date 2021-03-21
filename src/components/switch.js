@@ -5,7 +5,7 @@ export default function Switch(props) {
   return (
     <Typography component="div">
       <Grid container spacing={1} alignItems="center">
-        <Grid item>Small</Grid>
+        <Grid item>{props.off}</Grid>
         <Grid item>
           <UiSwitch
             checked={props.checked}
@@ -15,7 +15,7 @@ export default function Switch(props) {
             color="primary"
           />
         </Grid>
-        <Grid item>Large</Grid>
+        <Grid item>{props.on}</Grid>
       </Grid>
     </Typography>
   )

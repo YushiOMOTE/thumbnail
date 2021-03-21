@@ -1,10 +1,12 @@
-import React from "react"
-import { Grid, Button, MenuItem } from "@material-ui/core"
+import React, { useContext } from "react"
+import { Grid, Button, MenuItem, IconButton } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import SearchBar from "./search_bar"
 import Switch from "./switch"
 import Select from "./select"
 import { SORT_MODE } from "./const"
+import { ThemeContext } from "../theme"
+import Brightness4Icon from "@material-ui/icons/Brightness4"
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,6 +33,8 @@ export default function Form(props) {
   const sizeSwitch = sizeSwitchEnabled && (
     <Grid item>
       <Switch
+        off="Small"
+        on="Large"
         checked={props.large}
         onChange={checked => {
           props.onChange({ name: "large", value: checked })
@@ -39,9 +43,25 @@ export default function Form(props) {
     </Grid>
   )
 
+  const [darkMode, setDarkMode] = useContext(ThemeContext)
+
   return (
     <Grid container spacing={2} direction="column" className={classes.root}>
-      {sizeSwitch}
+      <Grid item container spacing={2} alignItems="center">
+        {sizeSwitch}
+
+        <Grid item xs={7} />
+        <Grid item xs={1}>
+          <IconButton
+            type="submit"
+            onClick={() => {
+              setDarkMode(!darkMode)
+            }}
+          >
+            <Brightness4Icon />
+          </IconButton>
+        </Grid>
+      </Grid>
 
       <Grid item>
         <SearchBar
@@ -86,7 +106,7 @@ export default function Form(props) {
           <Button
             disabled={!props.shuffleButton}
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={e => {
               props.onClickShuffle()
             }}
