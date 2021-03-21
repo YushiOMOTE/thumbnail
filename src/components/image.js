@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
-import Tooltip from "@material-ui/core/Tooltip"
+import { IconButton, Box, Tooltip } from "@material-ui/core"
 
 const style = {
   width: "100px",
@@ -19,34 +19,42 @@ function removeExtraSlash(s) {
 }
 
 export default function Image(props) {
+  const [selected, setSelected] = useState(false)
   const url = removeExtraSlash(props.url)
 
   const onMouseOver = e => {
-    e.currentTarget.style.border = "2px solid #008cba"
+    console.log("Over")
+    setSelected(true)
   }
 
   const onMouseOut = e => {
-    e.currentTarget.style.border = "none"
+    console.log("Out")
+    setSelected(false)
   }
 
   const markdown = url.replace(props.regex, props.replace)
+  const backgroundImage = "url(" + props.url + ")"
+  const border = selected ? "2px solid #008cba" : "none"
 
   return (
-    <Tooltip title={props.filename}>
+    <Box
+      onMouseOver={onMouseOver}
+      onMouseOut={onMouseOut}
+      onFocus={onMouseOver}
+      onBlur={onMouseOut}
+    >
       <CopyToClipboard
         text={markdown}
         onCopy={() => props.onCopy(props.filename)}
       >
-        <button
-          style={{ ...style, backgroundImage: "url(" + props.url + ")" }}
-          aria-label="copy"
-          data-tip={props.filename}
-          onMouseOver={onMouseOver}
-          onMouseOut={onMouseOut}
-          onFocus={onMouseOver}
-          onBlur={onMouseOut}
-        />
+        <Tooltip title={props.filename}>
+          <IconButton
+            style={{ ...style, backgroundImage, border }}
+            aria-label="copy"
+            data-tip={props.filename}
+          />
+        </Tooltip>
       </CopyToClipboard>
-    </Tooltip>
+    </Box>
   )
 }
