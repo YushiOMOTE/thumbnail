@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
 import { IconButton, Box, Tooltip } from "@material-ui/core"
+import LikeButton from "./like_button"
 
 const style = {
   width: "100px",
@@ -23,12 +24,10 @@ export default function Image(props) {
   const url = removeExtraSlash(props.url)
 
   const onMouseOver = e => {
-    console.log("Over")
     setSelected(true)
   }
 
   const onMouseOut = e => {
-    console.log("Out")
     setSelected(false)
   }
 
@@ -36,12 +35,19 @@ export default function Image(props) {
   const backgroundImage = "url(" + props.url + ")"
   const border = selected ? "2px solid #008cba" : "none"
 
+  const likeStyle = {
+    position: "absolute",
+    right: "2%",
+    top: "2%",
+  }
+
   return (
     <Box
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
       onFocus={onMouseOver}
       onBlur={onMouseOut}
+      style={{ position: "relative" }}
     >
       <CopyToClipboard
         text={markdown}
@@ -55,6 +61,9 @@ export default function Image(props) {
           />
         </Tooltip>
       </CopyToClipboard>
+      <Box style={likeStyle}>
+        <LikeButton name={props.filename} />
+      </Box>
     </Box>
   )
 }

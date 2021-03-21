@@ -7,6 +7,7 @@ import Image from "./image"
 import Form from "./form"
 import { SORT_MODE } from "./const"
 import "react-toastify/dist/ReactToastify.css"
+import { loadLike } from "./likes"
 
 function parseRegex(user_regex) {
   if (user_regex === undefined) {
@@ -62,7 +63,7 @@ function sortImages(edges, sortMode) {
   }
 }
 
-function filterImages(data, keyword, large) {
+function filterImages(data, keyword, large, likes) {
   return data
     .filter(({ node }, index) => {
       if (keyword === "") {
@@ -77,6 +78,12 @@ function filterImages(data, keyword, large) {
       } else {
         return node.attr === "small"
       }
+    })
+    .filter(({ node }, index) => {
+      if (!likes) {
+        return true
+      }
+      return loadLike(node.filename)
     })
 }
 
@@ -108,6 +115,7 @@ export default function Thumbnail(props) {
     pageSize: DEFAULT_PAGE_SIZE,
     sortMode: DEFAULT_SORT_MODE,
     nodes: [],
+    likes: false,
   })
 
   useEffect(() => {
@@ -134,9 +142,14 @@ export default function Thumbnail(props) {
 
   useEffect(() => {
     const sorted = sortImages(edges, state.sortMode)
-    const filtered = filterImages(sorted, state.keyword, state.large)
+    const filtered = filterImages(
+      sorted,
+      state.keyword,
+      state.large,
+      state.likes
+    )
     setState(state => ({ ...state, nodes: filtered }))
-  }, [state.sortMode, state.keyword, state.large, edges])
+  }, [state.sortMode, state.keyword, state.large, state.likes])
 
   const onChange = event => {
     localStorage.setItem(event.name, event.value)
@@ -181,6 +194,13 @@ export default function Thumbnail(props) {
 
   const withShuffle = state.sortMode === SORT_MODE.random
 
+  const onLike = (filename, liked) => {
+    let likes = JSON.parse(localStorage.getItem("likes")) || {}
+    likes[filename] = liked
+    console.log(likes)
+    localStorage.setItem("likes", JSON.stringify(likes))
+  }
+
   return (
     <div>
       <Grid container alignItems="center" direction="column" spacing={4}>
@@ -217,7 +237,7 @@ export default function Thumbnail(props) {
         />
         <Grid item container spacing={1}>
           {nodes.map(({ node }, index) => (
-            <Grid item key={index}>
+            <Grid item key={node.filename}>
               <Image
                 url={props.base + node.relativePath}
                 filename={node.filename}
