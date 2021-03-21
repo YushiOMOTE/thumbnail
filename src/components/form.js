@@ -1,5 +1,12 @@
 import React, { useContext } from "react"
-import { Grid, Button, MenuItem, IconButton } from "@material-ui/core"
+import {
+  Grid,
+  Button,
+  MenuItem,
+  IconButton,
+  Checkbox,
+  FormControlLabel,
+} from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import SearchBar from "./search_bar"
 import Switch from "./switch"
@@ -113,6 +120,22 @@ export default function Form(props) {
           >
             Shuffle
           </Button>
+        </Grid>
+
+        <Grid item>
+          <FormControlLabel
+            label="Favorite"
+            control={
+              <Checkbox
+                label="Likes"
+                checked={props.likes}
+                color="secondary"
+                onChange={event => {
+                  props.onChange({ name: "likes", value: event.target.checked })
+                }}
+              />
+            }
+          />
         </Grid>
       </Grid>
     </Grid>
